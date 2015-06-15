@@ -14,5 +14,8 @@ mv dsdt.aml /Volumes/EFI/EFI/CLOVER/acpi/patched/
 echo "=== COMPILING SSDT ==="
 iasl ssdt-1.dsl
 mv ssdt-1.aml /Volumes/EFI/EFI/CLOVER/acpi/patched/
+echo "=== COMPILING CPU SSDT ==="
+iasl ssdt-2.dsl
+mv ssdt-2.aml /Volumes/EFI/EFI/CLOVER/acpi/patched/
 sudo diskutil unmount /Volumes/EFI
 
