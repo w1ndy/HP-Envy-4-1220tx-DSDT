@@ -16005,38 +16005,7 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
                 Return (Local0)
             }
 
-            Method (_DSM, 4, Serialized)
-            {
-                Name (DRET, Buffer (0x04)
-                {
-                    0x00
-                })
-                If (LEqual (Arg0, Buffer (0x10)
-                        {
-                            /* 0000 */    0xE1, 0x75, 0x39, 0x6F, 0x82, 0x7A, 0x67, 0x4F, 
-                            /* 0008 */    0x8B, 0x97, 0x15, 0xBE, 0xE0, 0x60, 0xBE, 0xDF
-                        }))
-                {
-                    If (LEqual (Arg2, Zero))
-                    {
-                        CreateWordField (DRET, Zero, F0SS)
-                        Store (0x02, F0SS)
-                        Return (DRET)
-                    }
-
-                    If (LEqual (Arg2, One))
-                    {
-                        If (LEqual (^^PEG0.PEGP.LNKV, 0x03))
-                        {
-                            Return (Zero)
-                        }
-
-                        Return (One)
-                    }
-                }
-
-                Return (DRET)
-            }
+            
             OperationRegion (RMPC, PCI_Config, 0x10, 4)
             Field (RMPC, AnyAcc, NoLock, Preserve)
             {
@@ -16195,6 +16164,16 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
                     1249, 1296, 1343, 1391,
                     1440, 1490, 1541, 1592,
                     1645, 1698, 1753, 1808,
+                })
+            }
+            Method (_DSM, 4, NotSerialized)
+            {
+                If (LEqual (Arg2, Zero)) { Return (Buffer() { 0x03 } ) }
+                Return (Package()
+                {
+                    "AAPL,ig-platform-id", Buffer() { 0x03, 0x00, 0x66, 0x01 },
+                    "AAPL00,DualLink", Buffer() { 0x01, 0x00, 0x00, 0x00 },
+                    "hda-gfx", Buffer() { "onboard-1" },
                 })
             }
         }
@@ -17508,13 +17487,17 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
         Method (_Q11, 0, NotSerialized)
         {
             Store (0x11, P80H)
-            Notify (^^^IGPU.DD02, 0x87)
+            //Notify (^^^IGPU.DD02, 0x87)
+            Notify (PS2K, 0x0205)
+            Notify (PS2K, 0x0285)
         }
 
         Method (_Q12, 0, NotSerialized)
         {
             Store (0x12, P80H)
-            Notify (^^^IGPU.DD02, 0x86)
+            //Notify (^^^IGPU.DD02, 0x86)
+            Notify (PS2K, 0x0206)
+            Notify (PS2K, 0x0286)
         }
 
         Method (_Q13, 0, NotSerialized)

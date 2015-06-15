@@ -168,14 +168,12 @@
             <key>ATI</key>
             <false/>
             <key>Intel</key>
-            <true/>
+            <false/>
             <key>NVidia</key>
             <false/>
         </dict>
         <key>PatchVBios</key>
         <false/>
-	<key>ig-platform-id</key>
-	<string>0x01660003</string>
 	</dict>
 	<key>KernelAndKextPatches</key>
 	<dict>
