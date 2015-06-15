@@ -4264,7 +4264,7 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
 
                     If (LAnd (LEqual (Local1, 0xB6), LEqual (Local2, One)))
                     {
-                        Notify (^^PCI0.GFX0.DD02, 0x87)
+                        Notify (^^PCI0.IGPU.DD02, 0x87)
                         Sleep (0x01F4)
                         Store (^^PCI0.LPCB.EC0.BRTS, Index (DerefOf (Index (Local0, 0x02)), 0x02))
                         Store (0x0A, Index (DerefOf (Index (Local0, 0x02)), 0x03))
@@ -4272,7 +4272,7 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
 
                     If (LAnd (LEqual (Local1, 0xB7), LEqual (Local2, One)))
                     {
-                        Notify (^^PCI0.GFX0.DD02, 0x86)
+                        Notify (^^PCI0.IGPU.DD02, 0x86)
                         Sleep (0x01F4)
                         Store (^^PCI0.LPCB.EC0.BRTS, Index (DerefOf (Index (Local0, 0x02)), 0x02))
                         Store (0x0A, Index (DerefOf (Index (Local0, 0x02)), 0x03))
@@ -4280,7 +4280,7 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
 
                     If (LAnd (LEqual (Local1, 0xAE), LEqual (Local2, One)))
                     {
-                        Store (^^PCI0.GFX0.FNF4 (Local0), Local0)
+                        Store (^^PCI0.IGPU.FNF4 (Local0), Local0)
                     }
 
                     Return (Local0)
@@ -7269,19 +7269,19 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
 
             If (IGDS)
             {
-                If (\_SB.PCI0.GFX0.SCIP ())
+                If (\_SB.PCI0.IGPU.SCIP ())
                 {
-                    If (LEqual (\_SB.PCI0.GFX0.CLID, Zero))
+                    If (LEqual (\_SB.PCI0.IGPU.CLID, Zero))
                     {
                         If (LEqual (GP15, One))
                         {
-                            \_SB.PCI0.GFX0.GLID (GP15)
+                            \_SB.PCI0.IGPU.GLID (GP15)
                         }
                     }
 
                     If (LEqual (\_SB.PCI0.LPCB.EC0.AAST, One))
                     {
-                        \_SB.PCI0.GFX0.GLID (One)
+                        \_SB.PCI0.IGPU.GLID (One)
                     }
                 }
             }
@@ -7376,9 +7376,9 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
             Store (One, \_SB.PCI0.LPCB.EC0.S4RM)
             If (IGDS)
             {
-                If (LEqual (\_SB.PCI0.GFX0.CLID, Zero))
+                If (LEqual (\_SB.PCI0.IGPU.CLID, Zero))
                 {
-                    \_SB.PCI0.GFX0.GLID (One)
+                    \_SB.PCI0.IGPU.GLID (One)
                 }
             }
         }
@@ -8251,42 +8251,42 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
     {
         If (LEqual (And (DID1, 0x0F00), 0x0400))
         {
-            Notify (\_SB.PCI0.GFX0.DD01, Arg0)
+            Notify (\_SB.PCI0.IGPU.DD01, Arg0)
         }
 
         If (LEqual (And (DID2, 0x0F00), 0x0400))
         {
-            Notify (\_SB.PCI0.GFX0.DD02, Arg0)
+            Notify (\_SB.PCI0.IGPU.DD02, Arg0)
         }
 
         If (LEqual (And (DID3, 0x0F00), 0x0400))
         {
-            Notify (\_SB.PCI0.GFX0.DD03, Arg0)
+            Notify (\_SB.PCI0.IGPU.DD03, Arg0)
         }
 
         If (LEqual (And (DID4, 0x0F00), 0x0400))
         {
-            Notify (\_SB.PCI0.GFX0.DD04, Arg0)
+            Notify (\_SB.PCI0.IGPU.DD04, Arg0)
         }
 
         If (LEqual (And (DID5, 0x0F00), 0x0400))
         {
-            Notify (\_SB.PCI0.GFX0.DD05, Arg0)
+            Notify (\_SB.PCI0.IGPU.DD05, Arg0)
         }
 
         If (LEqual (And (DID6, 0x0F00), 0x0400))
         {
-            Notify (\_SB.PCI0.GFX0.DD06, Arg0)
+            Notify (\_SB.PCI0.IGPU.DD06, Arg0)
         }
 
         If (LEqual (And (DID7, 0x0F00), 0x0400))
         {
-            Notify (\_SB.PCI0.GFX0.DD07, Arg0)
+            Notify (\_SB.PCI0.IGPU.DD07, Arg0)
         }
 
         If (LEqual (And (DID8, 0x0F00), 0x0400))
         {
-            Notify (\_SB.PCI0.GFX0.DD08, Arg0)
+            Notify (\_SB.PCI0.IGPU.DD08, Arg0)
         }
     }
 
@@ -8559,9 +8559,9 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
 
         Method (_L06, 0, NotSerialized)
         {
-            If (LAnd (\_SB.PCI0.GFX0.GSSE, LNot (GSMI)))
+            If (LAnd (\_SB.PCI0.IGPU.GSSE, LNot (GSMI)))
             {
-                \_SB.PCI0.GFX0.GSCI ()
+                \_SB.PCI0.IGPU.GSCI ()
             }
         }
 
@@ -8598,9 +8598,9 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
 
             If (IGDS)
             {
-                If (\_SB.PCI0.GFX0.SCIP ())
+                If (\_SB.PCI0.IGPU.SCIP ())
                 {
-                    \_SB.PCI0.GFX0.GLID (GP15)
+                    \_SB.PCI0.IGPU.GLID (GP15)
                 }
                 Else
                 {
@@ -12905,7 +12905,7 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
             Name (_ADR, 0x00040000)
         }
 
-        Device (GFX0)
+        Device (IGPU)
         {
             Name (_ADR, 0x00020000)
             Method (PCPC, 0, NotSerialized)
@@ -15709,7 +15709,7 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
                     }
                     Else
                     {
-                        Notify (GFX0, Arg1)
+                        Notify (IGPU, Arg1)
                     }
                 }
 
@@ -15719,7 +15719,7 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
                 }
                 Else
                 {
-                    Notify (GFX0, 0x80)
+                    Notify (IGPU, 0x80)
                 }
 
                 Return (Zero)
@@ -16839,9 +16839,9 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
                 }
 
                 Store (One, LIDS)
-                Store (One, ^^^GFX0.CLID)
-                Or (0x80000000, ^^^GFX0.CLID, ^^^GFX0.CLID)
-                Notify (GFX0, Zero)
+                Store (One, ^^^IGPU.CLID)
+                Or (0x80000000, ^^^IGPU.CLID, ^^^IGPU.CLID)
+                Notify (IGPU, Zero)
             }
         }
 
@@ -17227,13 +17227,13 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
         Method (_Q11, 0, NotSerialized)
         {
             Store (0x11, P80H)
-            Notify (^^^GFX0.DD02, 0x87)
+            Notify (^^^IGPU.DD02, 0x87)
         }
 
         Method (_Q12, 0, NotSerialized)
         {
             Store (0x12, P80H)
-            Notify (^^^GFX0.DD02, 0x86)
+            Notify (^^^IGPU.DD02, 0x86)
         }
 
         Method (_Q13, 0, NotSerialized)
@@ -17453,5 +17453,112 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
         Zero, 
         Zero
     })
+    Device (RMDT)
+    {
+        Name (_HID, "RMD0000")
+        Name (RING, Package(256) { })
+        Mutex (RTMX, 0)
+        Name (HEAD, 0)
+        Name (TAIL, 0)
+        // PUSH: Use to push a trace item into RING for ACPIDebug.kext
+        Method (PUSH, 1, NotSerialized)
+        {
+            Acquire(RTMX, 0xFFFF)
+            // push new item at HEAD
+            Add(HEAD, 1, Local0)
+            If (LGreaterEqual(Local0, SizeOf(RING))) { Store(0, Local0) }
+            if (LNotEqual(Local0, TAIL))
+            {
+                Store(Arg0, Index(RING, HEAD))
+                Store(Local0, HEAD)
+            }
+            Release(RTMX)
+            Notify(RMDT, 0x80)
+        }
+        // FTCH: Used by ACPIDebug.kext to fetch an item from RING
+        Method (FTCH, 0, NotSerialized)
+        {
+            Acquire(RTMX, 0xFFFF)
+            // pull item from TAIL and return it
+            Store(0, Local0)
+            if (LNotEqual(HEAD, TAIL))
+            {
+                Store(DerefOf(Index(RING, TAIL)), Local0)
+                Increment(TAIL)
+                If (LGreaterEqual(TAIL, SizeOf(RING))) { Store(0, TAIL) }
+            }
+            Release(RTMX)
+            Return(Local0)
+        }
+        // COUN: Used by ACPIDebug.kext to determine number of items in RING
+        Method (COUN, 0, NotSerialized)
+        {
+            Acquire(RTMX, 0xFFFF)
+            // return count of items in RING
+            Subtract(HEAD, TAIL, Local0)
+            if (LLess(Local0, 0)) { Add(Local0, SizeOf(RING), Local0) }
+            Release(RTMX)
+            Return(Local0)
+        }
+        // Helper functions for multiple params at one time
+        Method (P1, 1, NotSerialized) { PUSH(Arg0) }
+        Method (P2, 2, Serialized)
+        {
+            Name (TEMP, Package(2) { })
+            Store(Arg0, Index(TEMP, 0))
+            Store(Arg1, Index(TEMP, 1))
+            PUSH(TEMP)
+        }
+        Method (P3, 3, Serialized)
+        {
+            Name (TEMP, Package(3) { })
+            Store(Arg0, Index(TEMP, 0))
+            Store(Arg1, Index(TEMP, 1))
+            Store(Arg2, Index(TEMP, 2))
+            PUSH(TEMP)
+        }
+        Method (P4, 4, Serialized)
+        {
+            Name (TEMP, Package(4) { })
+            Store(Arg0, Index(TEMP, 0))
+            Store(Arg1, Index(TEMP, 1))
+            Store(Arg2, Index(TEMP, 2))
+            Store(Arg3, Index(TEMP, 3))
+            PUSH(TEMP)
+        }
+        Method (P5, 5, Serialized)
+        {
+            Name (TEMP, Package(5) { })
+            Store(Arg0, Index(TEMP, 0))
+            Store(Arg1, Index(TEMP, 1))
+            Store(Arg2, Index(TEMP, 2))
+            Store(Arg3, Index(TEMP, 3))
+            Store(Arg4, Index(TEMP, 4))
+            PUSH(TEMP)
+        }
+        Method (P6, 6, Serialized)
+        {
+            Name (TEMP, Package(6) { })
+            Store(Arg0, Index(TEMP, 0))
+            Store(Arg1, Index(TEMP, 1))
+            Store(Arg2, Index(TEMP, 2))
+            Store(Arg3, Index(TEMP, 3))
+            Store(Arg4, Index(TEMP, 4))
+            Store(Arg5, Index(TEMP, 5))
+            PUSH(TEMP)
+        }
+        Method (P7, 7, Serialized)
+        {
+            Name (TEMP, Package(7) { })
+            Store(Arg0, Index(TEMP, 0))
+            Store(Arg1, Index(TEMP, 1))
+            Store(Arg2, Index(TEMP, 2))
+            Store(Arg3, Index(TEMP, 3))
+            Store(Arg4, Index(TEMP, 4))
+            Store(Arg5, Index(TEMP, 5))
+            Store(Arg6, Index(TEMP, 6))
+            PUSH(TEMP)
+        }
+    }
 }
 

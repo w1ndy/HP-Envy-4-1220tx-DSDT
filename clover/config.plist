@@ -8,35 +8,6 @@
 		<dict>
 			<key>Debug</key>
 			<false/>
-			<key>#DropOEM_DSM</key>
-			<dict>
-				<key>ATI</key>
-				<true/>
-				<key>Firewire</key>
-				<true/>
-				<key>HDA</key>
-				<true/>
-				<key>HDMI</key>
-				<true/>
-				<key>IDE</key>
-				<true/>
-				<key>IntelGFX</key>
-				<true/>
-				<key>LAN</key>
-				<true/>
-				<key>LPC</key>
-				<false/>
-				<key>NVidia</key>
-				<true/>
-				<key>SATA</key>
-				<true/>
-				<key>SmBUS</key>
-				<false/>
-				<key>USB</key>
-				<true/>
-				<key>WIFI</key>
-				<true/>
-			</dict>
 			<key>Fixes</key>
             <dict>
                 <key>AddDTGP_0001</key>
@@ -99,7 +70,7 @@
                 <false/>
             </dict>
 			<key>Name</key>
-			<string>DSDT.aml.no</string>
+			<string>dsdt.aml</string>
 			<key>ReuseFFFF</key>
 			<false/>
 		</dict>
@@ -124,6 +95,8 @@
         </array>
         <key>SSDT</key>
         <dict>
+        	<key>DropOem</key>
+        	<true/>
             <key>Generate</key>
             <dict>
                 <key>CStates</key>
