@@ -16,7 +16,7 @@
  *     Compiler ID      "ACPI"
  *     Compiler Version 0x00040000 (262144)
  */
-DefinitionBlock ("iASLljlOKp.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
+DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
 {
     External (HNOT, MethodObj)    // 1 Arguments
     External (SNXD, MethodObj)    // 1 Arguments
