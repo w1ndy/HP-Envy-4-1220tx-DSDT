@@ -1511,14 +1511,14 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
                     CreateQWordField (BUF0, 0x01F8, M2LN)
                     CreateQWordField (BUF0, 0x01E0, M2MN)
                     CreateQWordField (BUF0, 0x01E8, M2MX)
-                    Store (0x00000000, M2LN)
+                    Store (Zero, M2LN)
                     If (LGreaterEqual (TUUD, 0x1000))
                     {
                         ShiftLeft (TUUD, 0x14, M2MN)
                     }
                     Else
                     {
-                        Store (0x00000000, M2MN)
+                        Store (Zero, M2MN)
                     }
 
                     Subtract (Add (M2MN, M2LN), One, M2MX)
@@ -2596,7 +2596,7 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
                 Device (RTC)
                 {
                     Name (_HID, EisaId ("PNP0B00"))
-                    Name (_FIX, Package (0x01)
+                    Name (_FIX, Package (One)
                     {
                         0x000BD041
                     })
@@ -2793,6 +2793,8 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
                                                             If (LEqual (PREV, One))
                                                             {
                                                                 Return (0x7B1E2E4F)
+                                                            } Else {
+                                                                Return (Zero)
                                                             }
                                                         }
                                                     }
@@ -3010,7 +3012,8 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
 
                             Store (Arg0, ^^LPCB.EC0.SMAD)
                             Store (Arg1, ^^LPCB.EC0.SMCM)
-                            Store (Zero, ^^LPCB.EC0.SMD0)
+                            ^^LPCB.EC0.ZECB(0x64, 128)
+                            //Store (Zero, ^^LPCB.EC0.SMD0)
                             Store (Zero, ^^LPCB.EC0.SMST)
                             Store (0x07, ^^LPCB.EC0.SMPR)
                             If (LLessEqual (BDID, 0x02))
@@ -3027,7 +3030,7 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
 
                             If (LEqual (^^LPCB.EC0.SMST, 0x80))
                             {
-                                Store (^^LPCB.EC0.SMD0, Local1)
+                                Store (^^LPCB.EC0.RECB(0x64, 128), Local1)
                                 Store (DerefOf (Index (Local1, Zero)), Local2)
                                 Break
                             }
@@ -3071,7 +3074,8 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
 
                             Store (Arg0, ^^LPCB.EC0.SMAD)
                             Store (Arg1, ^^LPCB.EC0.SMCM)
-                            Store (LBUF, ^^LPCB.EC0.SMD0)
+                            ^^LPCB.EC0.WECB(0x64, 128, LBUF)
+                            //Store (LBUF, ^^LPCB.EC0.SMD0)
                             Store (Zero, ^^LPCB.EC0.SMST)
                             Store (0x06, ^^LPCB.EC0.SMPR)
                             If (LLessEqual (BDID, 0x02))
@@ -3681,7 +3685,7 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
                 }
 
                 Mutex (BTMX, 0x00)
-                Method (BATT, 1, NotSerialized)
+                Method (BATT, 1, Serialized)
                 {
                     Store ("Get Battery Information-----", Debug)
                     If (LOr (LNotEqual (Arg0, Zero), LEqual (^^PCI0.LPCB.EC0.BOL0, Zero)))
@@ -3705,12 +3709,12 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
                                 }, Local0)
                             If (LEqual (^^PCI0.LPCB.EC0.BAM0, Zero))
                             {
-                                Store (Multiply (^^PCI0.LPCB.EC0.BFC0, 0x2710), Local2)
-                                Divide (Local2, ^^PCI0.LPCB.EC0.BDV0, Local1, Local2)
+                                Store (Multiply (B1B2(^^PCI0.LPCB.EC0.DFC0, ^^PCI0.LPCB.EC0.DFC1), 0x2710), Local2)
+                                Divide (Local2, B1B2(^^PCI0.LPCB.EC0.DDV0, ^^PCI0.LPCB.EC0.DDV1), Local1, Local2)
                             }
                             Else
                             {
-                                Store (^^PCI0.LPCB.EC0.BFC0, Local2)
+                                Store (B1B2(^^PCI0.LPCB.EC0.DFC0, ^^PCI0.LPCB.EC0.DFC1), Local2)
                             }
 
                             Store (Local2, Index (DerefOf (Index (Local0, 0x02)), Zero))
@@ -3718,12 +3722,12 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
                                 )), One))
                             If (LEqual (^^PCI0.LPCB.EC0.BAM0, Zero))
                             {
-                                Store (Multiply (^^PCI0.LPCB.EC0.BFC0, 0x2710), Local3)
-                                Divide (Local3, ^^PCI0.LPCB.EC0.BDV0, Local1, Local3)
+                                Store (Multiply (B1B2(^^PCI0.LPCB.EC0.DFC0, ^^PCI0.LPCB.EC0.DFC1), 0x2710), Local3)
+                                Divide (Local3, B1B2(^^PCI0.LPCB.EC0.DDV0, ^^PCI0.LPCB.EC0.DDV1), Local1, Local3)
                             }
                             Else
                             {
-                                Store (^^PCI0.LPCB.EC0.BFC0, Local3)
+                                Store (B1B2(^^PCI0.LPCB.EC0.DFC0, ^^PCI0.LPCB.EC0.DFC1), Local3)
                             }
 
                             Store (Local3, Index (DerefOf (Index (Local0, 0x02)), 0x02))
@@ -3731,12 +3735,12 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
                                 )), 0x03))
                             If (LEqual (^^PCI0.LPCB.EC0.BAM0, Zero))
                             {
-                                Store (Multiply (^^PCI0.LPCB.EC0.BRC0, 0x2710), Local2)
-                                Divide (Local2, ^^PCI0.LPCB.EC0.BDV0, Local1, Local2)
+                                Store (Multiply (B1B2(^^PCI0.LPCB.EC0.DRC0, ^^PCI0.LPCB.EC0.DRC1), 0x2710), Local2)
+                                Divide (Local2, B1B2(^^PCI0.LPCB.EC0.DDV0, ^^PCI0.LPCB.EC0.DDV1), Local1, Local2)
                             }
                             Else
                             {
-                                Store (^^PCI0.LPCB.EC0.BRC0, Local2)
+                                Store (B1B2(^^PCI0.LPCB.EC0.DRC0, ^^PCI0.LPCB.EC0.DRC1), Local2)
                             }
 
                             Store (Local2, Index (DerefOf (Index (Local0, 0x02)), 0x04))
@@ -3749,31 +3753,31 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
                             Store (ShiftRight (^^PCI0.LPCB.EC0.CYC0, 0x08), Index (DerefOf (Index (Local0, 0x02
                                 )), 0x09))
                             Store (^^PCI0.LPCB.EC0.BAT0, Index (DerefOf (Index (Local0, 0x02)), 0x0A))
-                            Store (^^PCI0.LPCB.EC0.BPV0, Index (DerefOf (Index (Local0, 0x02)), 0x0C))
-                            Store (ShiftRight (^^PCI0.LPCB.EC0.BPV0, 0x08), Index (DerefOf (Index (Local0, 0x02
+                            Store (B1B2(^^PCI0.LPCB.EC0.DPV0, ^^PCI0.LPCB.EC0.DPV1), Index (DerefOf (Index (Local0, 0x02)), 0x0C))
+                            Store (ShiftRight (B1B2(^^PCI0.LPCB.EC0.DPV0, ^^PCI0.LPCB.EC0.DPV1), 0x08), Index (DerefOf (Index (Local0, 0x02
                                 )), 0x0D))
-                            Store (^^PCI0.LPCB.EC0.BPC0, Index (DerefOf (Index (Local0, 0x02)), 0x0E))
-                            Store (ShiftRight (^^PCI0.LPCB.EC0.BPC0, 0x08), Index (DerefOf (Index (Local0, 0x02
+                            Store (B1B2(^^PCI0.LPCB.EC0.DPC0, ^^PCI0.LPCB.EC0.DPC1), Index (DerefOf (Index (Local0, 0x02)), 0x0E))
+                            Store (ShiftRight (B1B2(^^PCI0.LPCB.EC0.DPC0, ^^PCI0.LPCB.EC0.DPC1), 0x08), Index (DerefOf (Index (Local0, 0x02
                                 )), 0x0F))
-                            Store (^^PCI0.LPCB.EC0.BDV0, Index (DerefOf (Index (Local0, 0x02)), 0x10))
-                            Store (ShiftRight (^^PCI0.LPCB.EC0.BDV0, 0x08), Index (DerefOf (Index (Local0, 0x02
+                            Store (B1B2(^^PCI0.LPCB.EC0.DDV0, ^^PCI0.LPCB.EC0.DDV1), Index (DerefOf (Index (Local0, 0x02)), 0x10))
+                            Store (ShiftRight (B1B2(^^PCI0.LPCB.EC0.DDV0, ^^PCI0.LPCB.EC0.DDV1), 0x08), Index (DerefOf (Index (Local0, 0x02
                                 )), 0x11))
-                            Store (^^PCI0.LPCB.EC0.BSSB, Index (DerefOf (Index (Local0, 0x02)), 0x12))
-                            Store (ShiftRight (^^PCI0.LPCB.EC0.BSSB, 0x08), Index (DerefOf (Index (Local0, 0x02
+                            Store (B1B2(^^PCI0.LPCB.EC0.DSS0, ^^PCI0.LPCB.EC0.DSS1), Index (DerefOf (Index (Local0, 0x02)), 0x12))
+                            Store (ShiftRight (B1B2(^^PCI0.LPCB.EC0.DSS0, ^^PCI0.LPCB.EC0.DSS1), 0x08), Index (DerefOf (Index (Local0, 0x02
                                 )), 0x13))
-                            Store (^^PCI0.LPCB.EC0.BCV1, Index (DerefOf (Index (Local0, 0x02)), 0x14))
-                            Store (ShiftRight (^^PCI0.LPCB.EC0.BCV1, 0x08), Index (DerefOf (Index (Local0, 0x02
+                            Store (B1B2(^^PCI0.LPCB.EC0.DV00, ^^PCI0.LPCB.EC0.DV01), Index (DerefOf (Index (Local0, 0x02)), 0x14))
+                            Store (ShiftRight (B1B2(^^PCI0.LPCB.EC0.DV00, ^^PCI0.LPCB.EC0.DV01), 0x08), Index (DerefOf (Index (Local0, 0x02
                                 )), 0x15))
-                            Store (^^PCI0.LPCB.EC0.BCV2, Index (DerefOf (Index (Local0, 0x02)), 0x16))
-                            Store (ShiftRight (^^PCI0.LPCB.EC0.BCV2, 0x08), Index (DerefOf (Index (Local0, 0x02
+                            Store (B1B2(^^PCI0.LPCB.EC0.DV10, ^^PCI0.LPCB.EC0.DV11), Index (DerefOf (Index (Local0, 0x02)), 0x16))
+                            Store (ShiftRight (B1B2(^^PCI0.LPCB.EC0.DV10, ^^PCI0.LPCB.EC0.DV11), 0x08), Index (DerefOf (Index (Local0, 0x02
                                 )), 0x17))
-                            Store (^^PCI0.LPCB.EC0.BCV3, Index (DerefOf (Index (Local0, 0x02)), 0x18))
-                            Store (ShiftRight (^^PCI0.LPCB.EC0.BCV3, 0x08), Index (DerefOf (Index (Local0, 0x02
+                            Store (B1B2(^^PCI0.LPCB.EC0.DV20, ^^PCI0.LPCB.EC0.DV21), Index (DerefOf (Index (Local0, 0x02)), 0x18))
+                            Store (ShiftRight (B1B2(^^PCI0.LPCB.EC0.DV20, ^^PCI0.LPCB.EC0.DV21), 0x08), Index (DerefOf (Index (Local0, 0x02
                                 )), 0x19))
-                            Store (^^PCI0.LPCB.EC0.BCV4, Index (DerefOf (Index (Local0, 0x02)), 0x1A))
-                            Store (ShiftRight (^^PCI0.LPCB.EC0.BCV4, 0x08), Index (DerefOf (Index (Local0, 0x02
+                            Store (B1B2(^^PCI0.LPCB.EC0.DV30, ^^PCI0.LPCB.EC0.DV31), Index (DerefOf (Index (Local0, 0x02)), 0x1A))
+                            Store (ShiftRight (B1B2(^^PCI0.LPCB.EC0.DV30, ^^PCI0.LPCB.EC0.DV31), 0x08), Index (DerefOf (Index (Local0, 0x02
                                 )), 0x1B))
-                            Store (^^PCI0.LPCB.EC0.BSN0, Local7)
+                            Store (B1B2(^^PCI0.LPCB.EC0.DSN0, ^^PCI0.LPCB.EC0.DSN1), Local7)
                             Name (SERN, Buffer (0x06)
                             {
                                 0x30, 0x30, 0x30, 0x30, 0x30, 0x20
@@ -3789,7 +3793,7 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
                             CreateField (DerefOf (Index (Local0, 0x02)), 0xE0, Multiply (SizeOf (SERN), 
                                 0x08), BSNO)
                             Store (SERN, BSNO)
-                            Store (^^PCI0.LPCB.EC0.BMD0, Local7)
+                            Store (B1B2(^^PCI0.LPCB.EC0.DMD0, ^^PCI0.LPCB.EC0.DMD1), Local7)
                             Name (BMDN, Buffer (0x0A)
                             {
                                 /* 0000 */    0x30, 0x30, 0x2F, 0x30, 0x30, 0x2F, 0x20, 0x20, 
@@ -3826,7 +3830,7 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
                             CreateField (DerefOf (Index (Local0, 0x02)), 0x0110, Multiply (SizeOf (BMDN), 
                                 0x08), BMNO)
                             Store (BMDN, BMNO)
-                            Store (^^PCI0.LPCB.EC0.BMNN, Local1)
+                            Store (^^PCI0.LPCB.EC0.RPRB(0x90, 72), Local1)
                             Store (Buffer (0x09)
                                 {
                                     /* 0000 */    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
@@ -3837,7 +3841,7 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
                             CreateField (DerefOf (Index (Local0, 0x02)), 0x01A8, 0x48, BMA1)
                             Store (Local1, BMA0)
                             Store (Local2, BMA1)
-                            Store (^^PCI0.LPCB.EC0.BCTL, Local3)
+                            Store (^^PCI0.LPCB.EC0.RPRB(0x2D, 128), Local3)
                             Store (0x3E, Local2)
                             Store (Zero, Local4)
                             Store (0x0F, Local1)
@@ -3851,7 +3855,7 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
                             }
 
                             Store (Zero, Index (DerefOf (Index (Local0, 0x02)), Local2))
-                            Store (^^PCI0.LPCB.EC0.BDVN, Local3)
+                            Store (^^PCI0.LPCB.EC0.RPRB(0x99, 56), Local3)
                             Store (0x4F, Local2)
                             Store (Zero, Local4)
                             Store (0x07, Local1)
@@ -3864,7 +3868,7 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
                                 Increment (Local4)
                             }
 
-                            Store (^^PCI0.LPCB.EC0.BTDC, Local3)
+                            Store (^^PCI0.LPCB.EC0.RPRB(0x88, 64), Local3)
                             Store (0x56, Local2)
                             Store (Zero, Local4)
                             Store (0x04, Local1)
@@ -3877,29 +3881,29 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
                                 Increment (Local4)
                             }
 
-                            Store (^^PCI0.LPCB.EC0.MUAC, Index (DerefOf (Index (Local0, 0x02)), 0x5A))
-                            Store (ShiftRight (^^PCI0.LPCB.EC0.MUAC, 0x08), Index (DerefOf (Index (Local0, 0x02
+                            Store (B1B2(^^PCI0.LPCB.EC0.MUA0, ^^PCI0.LPCB.EC0.MUA1), Index (DerefOf (Index (Local0, 0x02)), 0x5A))
+                            Store (ShiftRight (B1B2(^^PCI0.LPCB.EC0.MUA0, ^^PCI0.LPCB.EC0.MUA1), 0x08), Index (DerefOf (Index (Local0, 0x02
                                 )), 0x5B))
-                            Store (^^PCI0.LPCB.EC0.BMD0, Index (DerefOf (Index (Local0, 0x02)), 0x5C))
-                            Store (ShiftRight (^^PCI0.LPCB.EC0.BMD0, 0x08), Index (DerefOf (Index (Local0, 0x02
+                            Store (B1B2(^^PCI0.LPCB.EC0.DMD0, ^^PCI0.LPCB.EC0.DMD1), Index (DerefOf (Index (Local0, 0x02)), 0x5C))
+                            Store (ShiftRight (B1B2(^^PCI0.LPCB.EC0.DMD0, ^^PCI0.LPCB.EC0.DMD1), 0x08), Index (DerefOf (Index (Local0, 0x02
                                 )), 0x5D))
-                            Store (^^PCI0.LPCB.EC0.BCG0, Index (DerefOf (Index (Local0, 0x02)), 0x5E))
-                            Store (ShiftRight (^^PCI0.LPCB.EC0.BCG0, 0x08), Index (DerefOf (Index (Local0, 0x02
+                            Store (B1B2(^^PCI0.LPCB.EC0.DCG0, ^^PCI0.LPCB.EC0.DCG1), Index (DerefOf (Index (Local0, 0x02)), 0x5E))
+                            Store (ShiftRight (B1B2(^^PCI0.LPCB.EC0.DCG0, ^^PCI0.LPCB.EC0.DCG1), 0x08), Index (DerefOf (Index (Local0, 0x02
                                 )), 0x5F))
-                            Store (^^PCI0.LPCB.EC0.BACV, Index (DerefOf (Index (Local0, 0x02)), 0x60))
-                            Store (ShiftRight (^^PCI0.LPCB.EC0.BACV, 0x08), Index (DerefOf (Index (Local0, 0x02
+                            Store (B1B2(^^PCI0.LPCB.EC0.DAV0, ^^PCI0.LPCB.EC0.DAV1), Index (DerefOf (Index (Local0, 0x02)), 0x60))
+                            Store (ShiftRight (B1B2(^^PCI0.LPCB.EC0.DAV0, ^^PCI0.LPCB.EC0.DAV1), 0x08), Index (DerefOf (Index (Local0, 0x02
                                 )), 0x61))
-                            Store (^^PCI0.LPCB.EC0.BAC0, Index (DerefOf (Index (Local0, 0x02)), 0x62))
-                            Store (ShiftRight (^^PCI0.LPCB.EC0.BAC0, 0x08), Index (DerefOf (Index (Local0, 0x02
+                            Store (B1B2(^^PCI0.LPCB.EC0.DAC0, ^^PCI0.LPCB.EC0.DAC1), Index (DerefOf (Index (Local0, 0x02)), 0x62))
+                            Store (ShiftRight (B1B2(^^PCI0.LPCB.EC0.DAC0, ^^PCI0.LPCB.EC0.DAC1), 0x08), Index (DerefOf (Index (Local0, 0x02
                                 )), 0x63))
-                            Store (^^PCI0.LPCB.EC0.RTTE, Index (DerefOf (Index (Local0, 0x02)), 0x64))
-                            Store (ShiftRight (^^PCI0.LPCB.EC0.RTTE, 0x08), Index (DerefOf (Index (Local0, 0x02
+                            Store (B1B2(^^PCI0.LPCB.EC0.RTE0, ^^PCI0.LPCB.EC0.RTE1), Index (DerefOf (Index (Local0, 0x02)), 0x64))
+                            Store (ShiftRight (B1B2(^^PCI0.LPCB.EC0.RTE0, ^^PCI0.LPCB.EC0.RTE1), 0x08), Index (DerefOf (Index (Local0, 0x02
                                 )), 0x65))
-                            Store (^^PCI0.LPCB.EC0.ATTE, Index (DerefOf (Index (Local0, 0x02)), 0x66))
-                            Store (ShiftRight (^^PCI0.LPCB.EC0.ATTE, 0x08), Index (DerefOf (Index (Local0, 0x02
+                            Store (B1B2(^^PCI0.LPCB.EC0.ATE0, ^^PCI0.LPCB.EC0.ATE1), Index (DerefOf (Index (Local0, 0x02)), 0x66))
+                            Store (ShiftRight (B1B2(^^PCI0.LPCB.EC0.ATE0, ^^PCI0.LPCB.EC0.ATE1), 0x08), Index (DerefOf (Index (Local0, 0x02
                                 )), 0x67))
-                            Store (^^PCI0.LPCB.EC0.ATTF, Index (DerefOf (Index (Local0, 0x02)), 0x68))
-                            Store (ShiftRight (^^PCI0.LPCB.EC0.ATTF, 0x08), Index (DerefOf (Index (Local0, 0x02
+                            Store (B1B2(^^PCI0.LPCB.EC0.ATF0, ^^PCI0.LPCB.EC0.ATF1), Index (DerefOf (Index (Local0, 0x02)), 0x68))
+                            Store (ShiftRight (B1B2(^^PCI0.LPCB.EC0.ATF0, ^^PCI0.LPCB.EC0.ATF1), 0x08), Index (DerefOf (Index (Local0, 0x02
                                 )), 0x69))
                             Store (One, Index (DerefOf (Index (Local0, 0x02)), 0x6A))
                             Release (BTMX)
@@ -5201,7 +5205,7 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
                         Store (0x40, ^^PCI0.LPCB.EC0.PRDT)
                     }
 
-                    Store (ECMT (FromBCD (^^PCI0.LPCB.RTC.RTCH), FromBCD (^^PCI0.LPCB.RTC.RTCM)), ^^PCI0.LPCB.EC0.PRTM)
+                    Store (ECMT (FromBCD (^^PCI0.LPCB.RTC.RTCH), FromBCD (^^PCI0.LPCB.RTC.RTCM)), B1B2(^^PCI0.LPCB.EC0.DRT0, ^^PCI0.LPCB.EC0.DRT1))
                 }
 
                 Method (GPST, 0, NotSerialized)
@@ -5718,7 +5722,7 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
                     Return (Zero)
                 }
 
-                Method (WMBA, 3, NotSerialized)
+                Method (WMBA, 3, Serialized)
                 {
                     Name (DBUF, Buffer (0x80) {})
                     If (LEqual (Arg1, One))
@@ -5775,7 +5779,7 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
                     Return (One)
                 }
 
-                Method (WQBC, 1, NotSerialized)
+                Method (WQBC, 1, Serialized)
                 {
                     Store (Arg0, Local0)
                     Store (Local0, HWBF)
@@ -7652,7 +7656,7 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
         {
             Name (_HID, EisaId ("PNP0C0B"))
             Name (_UID, Zero)
-            Name (_PR0, Package (0x01)
+            Name (_PR0, Package (One)
             {
                 FN00
             })
@@ -7691,7 +7695,7 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
         {
             Name (_HID, EisaId ("PNP0C0B"))
             Name (_UID, One)
-            Name (_PR0, Package (0x01)
+            Name (_PR0, Package (One)
             {
                 FN01
             })
@@ -7730,7 +7734,7 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
         {
             Name (_HID, EisaId ("PNP0C0B"))
             Name (_UID, 0x02)
-            Name (_PR0, Package (0x01)
+            Name (_PR0, Package (One)
             {
                 FN02
             })
@@ -7808,7 +7812,7 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
         {
             Name (_HID, EisaId ("PNP0C0B"))
             Name (_UID, 0x04)
-            Name (_PR0, Package (0x01)
+            Name (_PR0, Package (One)
             {
                 FN04
             })
@@ -7858,6 +7862,7 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
                 {
                     Return (Multiply (\_SB.PCI0.LPCB.EC0.FRPM, 0x64))
                 }
+                Return (Zero)
             }
 
             Method (FSSP, 1, NotSerialized)
@@ -7921,23 +7926,23 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
                 Return (0x0AAC)
             }
 
-            Name (_AL0, Package (0x01)
+            Name (_AL0, Package (One)
             {
                 FAN0
             })
-            Name (_AL1, Package (0x01)
+            Name (_AL1, Package (One)
             {
                 FAN1
             })
-            Name (_AL2, Package (0x01)
+            Name (_AL2, Package (One)
             {
                 FAN2
             })
-            Name (_AL3, Package (0x01)
+            Name (_AL3, Package (One)
             {
                 FAN3
             })
-            Name (_AL4, Package (0x01)
+            Name (_AL4, Package (One)
             {
                 FAN4
             })
@@ -8108,7 +8113,7 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
                     })
                 }
 
-                Return (Package (0x01)
+                Return (Package (One)
                 {
                     \_PR.CPU0
                 })
@@ -8842,7 +8847,7 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
             Return (Local0)
         }
 
-        Method (SPIO, 3, NotSerialized)
+        Method (SPIO, 3, Serialized)
         {
             Name (PBUF, Buffer (0x05)
             {
@@ -8896,7 +8901,7 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
             Return (PBUF)
         }
 
-        Method (SDMA, 3, NotSerialized)
+        Method (SDMA, 3, Serialized)
         {
             Name (PBUF, Buffer (0x05)
             {
@@ -9095,7 +9100,7 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
                         Zero, 
                         Zero
                     })
-                    Name (_PLD, Package (0x01)
+                    Name (_PLD, Package (One)
                     {
                         Buffer (0x10)
                         {
@@ -9113,7 +9118,7 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
                             Zero, 
                             Zero
                         })
-                        Name (_PLD, Package (0x01)
+                        Name (_PLD, Package (One)
                         {
                             Buffer (0x10)
                             {
@@ -9147,7 +9152,7 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
                             Zero, 
                             Zero
                         })
-                        Name (_PLD, Package (0x01)
+                        Name (_PLD, Package (One)
                         {
                             Buffer (0x10)
                             {
@@ -9167,7 +9172,7 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
                             Zero, 
                             Zero
                         })
-                        Name (_PLD, Package (0x01)
+                        Name (_PLD, Package (One)
                         {
                             Buffer (0x10)
                             {
@@ -9537,7 +9542,7 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
                         Zero, 
                         Zero
                     })
-                    Name (_PLD, Package (0x01)
+                    Name (_PLD, Package (One)
                     {
                         Buffer (0x10)
                         {
@@ -9575,7 +9580,7 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
                         Device (CAM0)
                         {
                             Name (_ADR, One)
-                            Name (_PLD, Package (0x01)
+                            Name (_PLD, Package (One)
                             {
                                 Buffer (0x14)
                                 {
@@ -9601,11 +9606,11 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
                         {
                             If (LEqual (OSYS, 0x07DC))
                             {
-                                Return (Package (0x00) {})
+                                Return (Package (Zero) {})
                             }
                             Else
                             {
-                                Return (Package (0x01)
+                                Return (Package (One)
                                 {
                                     Buffer (0x10)
                                     {
@@ -9970,7 +9975,7 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
 
                     Method (_PLD, 0, Serialized)
                     {
-                        Name (PLDP, Package (0x01)
+                        Name (PLDP, Package (One)
                         {
                             Buffer (0x10)
                             {
@@ -10010,7 +10015,7 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
 
                     Method (_PLD, 0, Serialized)
                     {
-                        Name (PLDP, Package (0x01)
+                        Name (PLDP, Package (One)
                         {
                             Buffer (0x10)
                             {
@@ -10050,7 +10055,7 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
 
                     Method (_PLD, 0, Serialized)
                     {
-                        Name (PLDP, Package (0x01)
+                        Name (PLDP, Package (One)
                         {
                             Buffer (0x10)
                             {
@@ -10090,7 +10095,7 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
 
                     Method (_PLD, 0, Serialized)
                     {
-                        Name (PLDP, Package (0x01)
+                        Name (PLDP, Package (One)
                         {
                             Buffer (0x10)
                             {
@@ -10130,7 +10135,7 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
 
                     Method (_PLD, 0, Serialized)
                     {
-                        Name (PLDP, Package (0x01)
+                        Name (PLDP, Package (One)
                         {
                             Buffer (0x10)
                             {
@@ -10170,7 +10175,7 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
 
                     Method (_PLD, 0, Serialized)
                     {
-                        Name (PLDP, Package (0x01)
+                        Name (PLDP, Package (One)
                         {
                             Buffer (0x10)
                             {
@@ -10210,7 +10215,7 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
 
                     Method (_PLD, 0, Serialized)
                     {
-                        Name (PLDP, Package (0x01)
+                        Name (PLDP, Package (One)
                         {
                             Buffer (0x10)
                             {
@@ -10250,7 +10255,7 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
 
                     Method (_PLD, 0, Serialized)
                     {
-                        Name (PLDP, Package (0x01)
+                        Name (PLDP, Package (One)
                         {
                             Buffer (0x10)
                             {
@@ -10321,7 +10326,7 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
             Method (_EJ0, 1, NotSerialized)
             {
                 P8XH (Zero, 0xED, Zero)
-                Return (One)
+                //Return (One)
             }
 
             Method (_STA, 0, NotSerialized)
@@ -12929,7 +12934,7 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
                 }
             }
 
-            Method (_DOD, 0, NotSerialized)
+            Method (_DOD, 0, Serialized)
             {
                 If (CondRefOf (IDAB))
                 {
@@ -12981,7 +12986,7 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
 
                 If (LEqual (NDID, One))
                 {
-                    Name (TMP1, Package (0x01)
+                    Name (TMP1, Package (One)
                     {
                         Ones
                     })
@@ -13123,7 +13128,7 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
                     }
                 }
 
-                Return (Package (0x01)
+                Return (Package (One)
                 {
                     0x0400
                 })
@@ -14010,7 +14015,7 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
                         0x64
                     }
                 })
-                Method (SOBT, 0, NotSerialized)
+                Method (SOBT, 0, Serialized)
                 {
                     Store (Package (0x0B)
                         {
@@ -16073,7 +16078,7 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
                 // KMAX: defines the unscaled range in the _BCL table below
                 Name (KMAX, 0x710)
                 // KPCH: saved value for PCHL
-                Name(KPCH, 0)
+                Name(KPCH, Zero)
                 // _INI deals with differences between native setting and desired
                 Method (_INI, 0, NotSerialized)
                 {
@@ -16086,7 +16091,7 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
                     If (LNotEqual(LMAX, KMAX))
                     {
                         // Scale all the values in _BCL to the PWM max in use
-                        Store(0, Local0)
+                        Store(Zero, Local0)
                         While (LLess(Local0, SizeOf(_BCL)))
                         {
                             Store(DerefOf(Index(_BCL,Local0)), Local1)
@@ -16122,7 +16127,7 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
                     If (LNotEqual(LEVW, 0x80000000)) { Store (0x80000000, LEVW) }
                     If (LNotEqual(LEVX, KLVX)) { Store (KLVX, LEVX) }
                     // store new backlight level
-                    Store(Match(_BCL, MGE, Arg0, MTR, 0, 2), Local0)
+                    Store(Match(_BCL, MGE, Arg0, MTR, Zero, 2), Local0)
                     If (LEqual(Local0, Ones)) { Subtract(SizeOf(_BCL), 1, Local0) }
                     If (LNotEqual(LEV2, 0x80000000)) { Store(0x80000000, LEV2) }
                     Store(DerefOf(Index(_BCL, Local0)), LEVL)
@@ -16444,36 +16449,66 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
                 BMF0,   3, 
                         Offset (0x8C1), 
                 BST0,   8, 
-                BRC0,   16, 
-                BSN0,   16, 
-                BPV0,   16, 
-                BDV0,   16, 
+                //BRC0,   16,
+                DRC0,   8,
+                DRC1,   8, 
+                //BSN0,   16,
+                DSN0,    8,
+                DSN1,    8, 
+                //BPV0,   16, 
+                DPV0,    8,
+                DPV1,    8,
+                //BDV0,   16, 
+                DDV0,    8,
+                DDV1,    8,
                 BDC0,   16, 
-                BFC0,   16, 
+                //BFC0,   16, 
+                DFC0,    8,
+                DFC1,    8,
                 GAU0,   8, 
                 CYC0,   8, 
-                BPC0,   16, 
-                BAC0,   16, 
+                //BPC0,   16, 
+                DPC0,    8,
+                DPC1,    8,
+                //BAC0,   16, 
+                DAC0,    8,
+                DAC1,    8,
                 BTW0,   8, 
                 BVL0,   8, 
                 BTM0,   8, 
                 BAT0,   8, 
-                BCG0,   16, 
+                //BCG0,   16, 
+                DCG0,    8,
+                DCG1,    8,
                 BCT0,   8, 
                 BCI0,   8, 
                 BCM0,   8, 
                 BOT0,   8, 
-                BSSB,   16, 
+                //BSSB,   16, 
+                DSS0,   8,
+                DSS1,   8,
                 BOV0,   8, 
                 BCF0,   8, 
                 BAD0,   8, 
-                BCV1,   16, 
-                BCV2,   16, 
-                BCV3,   16, 
-                BCV4,   16, 
+                //BCV1,   16, 
+                DV00,    8,
+                DV01,    8,
+                //BCV2,   16, 
+                DV10,    8,
+                DV11,    8,
+                //BCV3,   16,
+                DV20,    8,
+                DV21,    8, 
+                //BCV4,   16,
+                DV30,    8,
+                DV31,    8, 
                         Offset (0x8F4), 
-                BMD0,   16, 
-                BACV,   16, 
+                //BMD0,   16, 
+                DMD0,    8,
+                DMD1,    8,
+                //BACV,   16,
+                DAV0,    8,
+                DAV1,    8, 
                 BDN0,   8, 
                         Offset (0x8FA)
             }
@@ -16559,7 +16594,9 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
                 CPUT,   8, 
                         Offset (0xBC0), 
                         Offset (0xBC2), 
-                PRTM,   16, 
+                //PRTM,   16, 
+                DRT0,    8,
+                DRT1,    8,
                         Offset (0xBC8), 
                 PSS1,   16, 
                 PSS2,   16, 
@@ -16598,13 +16635,13 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
                         Offset (0x5B), 
                         Offset (0x5C), 
                         Offset (0x5D), 
-                ENIB,   16, 
-                ENDD,   8, 
-                SMPR,   8, 
-                SMST,   8, 
-                SMAD,   8, 
-                SMCM,   8, 
-                SMD0,   256, 
+                ENIB,   16,     //0x5d
+                ENDD,   8,      //0x5f
+                SMPR,   8,      //0x60
+                SMST,   8,      //0x61
+                SMAD,   8,      //0x62
+                SMCM,   8,      //0x63
+                SMD0,   256,    //0x64
                 BCNT,   8, 
                 SMAA,   24, 
                         Offset (0x89)
@@ -16623,16 +16660,24 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
                         Offset (0x2D), 
                 BCTL,   128, 
                         Offset (0x88), 
-                BTDC,   64, 
-                BMNN,   72, 
-                BDVN,   56, 
+                BTDC,   64, //0x88
+                BMNN,   72, //0x90
+                BDVN,   56, //0x99
                         Offset (0xEB), 
-                MUAC,   16, 
-                ATTE,   16, 
+                //MUAC,   16, 
+                MUA0,    8,
+                MUA1,    8,
+                //ATTE,   16, 
+                ATE0,    8,
+                ATE1,    8,
                 MXER,   8, 
                         Offset (0xF9), 
-                RTTE,   16, 
-                ATTF,   16, 
+                //RTTE,   16, 
+                RTE0,    8,
+                RTE1,    8,
+                //ATTF,   16, 
+                ATF0,    8,
+                ATF1,    8,
                 SBVR,   16
             }
 
@@ -16652,7 +16697,9 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
             Field (ECRM, ByteAcc, Lock, Preserve)
             {
                         Offset (0x5D), 
-                ERIB,   16, 
+                //ERIB,   16, 
+                ERI0,    8,
+                ERI1,    8,
                 ERBD,   8, 
                         Offset (0xAA), 
                         Offset (0xAB), 
@@ -16670,11 +16717,84 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
                         Offset (0xBD)
             }
 
+            Method (RE1B, 1, Serialized)
+    {
+        OperationRegion(ERAM, EmbeddedControl, Arg0, 1)
+        Field(ERAM, ByteAcc, NoLock, Preserve) { BYTE, 8 }
+        Return(BYTE)
+    }
+    Method (RECB, 2, Serialized)
+    {
+        ShiftRight(Arg1, 3, Arg1)
+        Name(TEMP, Buffer(Arg1) { })
+        Add(Arg0, Arg1, Arg1)
+        Store(0, Local0)
+        While (LLess(Arg0, Arg1))
+        {
+            Store(RE1B(Arg0), Index(TEMP, Local0))
+            Increment(Arg0)
+            Increment(Local0)
+        }
+        Return(TEMP)
+    }
+    
+    Method (RP1B, 1, Serialized)
+    {
+        OperationRegion(ECPR, EmbeddedControl, Arg0, 1)
+        Field(ECPR, ByteAcc, NoLock, Preserve) { BYTE, 8 }
+        Return(BYTE)
+    }
+    Method (RPRB, 2, Serialized)
+    {
+        ShiftRight(Arg1, 3, Arg1)
+        Name(TEMP, Buffer(Arg1) { })
+        Add(Arg0, Arg1, Arg1)
+        Store(0, Local0)
+        While (LLess(Arg0, Arg1))
+        {
+            Store(RP1B(Arg0), Index(TEMP, Local0))
+            Increment(Arg0)
+            Increment(Local0)
+        }
+        Return(TEMP)
+    }
+    
+    Method (WE1B, 2, Serialized)
+    {
+        OperationRegion(ERAM, EmbeddedControl, Arg0, 1)
+        Field(ERAM, ByteAcc, NoLock, Preserve) { BYTE, 8 }
+        Store(Arg1, BYTE)
+    }
+    Method (WECB, 3, Serialized)
+    {
+        ShiftRight(Arg1, 3, Arg1)
+        Name(TEMP, Buffer(Arg1) { })
+        Store(Arg2, TEMP)
+        Add(Arg0, Arg1, Arg1)
+        Store(0, Local0)
+        While (LLess(Arg0, Arg1))
+        {
+            WE1B(Arg0, DerefOf(Index(TEMP, Local0)))
+            Increment(Arg0)
+            Increment(Local0)
+        }
+    }
+    Method (ZECB, 2, Serialized)
+    {
+        ShiftRight(Arg1, 3, Arg1)
+        Add(Arg0, Arg1, Arg1)
+        While (LLess(Arg0, Arg1))
+        {
+            WE1B(Arg0, 0x00)
+            Increment(Arg0)
+        }
+    }
+
             Mutex (FAMX, 0x00)
             Method (FANG, 1, NotSerialized)
             {
                 Acquire (FAMX, 0xFFFF)
-                Store (Arg0, ERIB)
+                Store (Arg0, B1B2(ERI0, ERI1))
                 Store (ERBD, Local0)
                 Release (FAMX)
                 Return (Local0)
@@ -16683,7 +16803,7 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
             Method (FANW, 2, NotSerialized)
             {
                 Acquire (FAMX, 0xFFFF)
-                Store (Arg0, ERIB)
+                Store (Arg0, B1B2(ERI0, ERI1))
                 Store (Arg1, ERBD)
                 Release (FAMX)
                 Return (Arg1)
@@ -16814,7 +16934,8 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
                             Acquire (CFMX, 0xFFFF)
                             If (LEqual (DerefOf (Index (Arg1, Zero)), 0x02))
                             {
-                                Store (Zero, SMD0)
+                                //Store (Zero, SMD0)
+                                ZECB(0x64, 128)
                                 Store (DerefOf (Index (Arg2, One)), SMAD)
                                 Store (DerefOf (Index (Arg2, 0x02)), SMCM)
                                 Store (DerefOf (Index (Arg2, Zero)), SMPR)
@@ -16834,7 +16955,7 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
                                     {
                                         Store (0xC4, P80H)
                                         Store (BCNT, Index (Local1, One))
-                                        Store (SMD0, Local3)
+                                        Store (RECB(0x64, 128), Local3)
                                         Store (DerefOf (Index (Local3, Zero)), Index (Local1, 0x02))
                                         Store (DerefOf (Index (Local3, One)), Index (Local1, 0x03))
                                         Store (DerefOf (Index (Local3, 0x02)), Index (Local1, 0x04))
@@ -17061,7 +17182,7 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
                     }, Local0)
                 If (ECOK ())
                 {
-                    Store (BDVN, Local1)
+                    Store (RPRB(0x99, 56), Local1)
                     CreateField (Local0, Zero, 0x38, BMA0)
                     Store (Local1, BMA0)
                 }
@@ -17077,7 +17198,7 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
                     }, Local0)
                 If (ECOK ())
                 {
-                    Store (BSN0, Local1)
+                    Store (B1B2(DSN0,DSN1), Local1)
                     Store (0x04, Local2)
                     While (Local1)
                     {
@@ -17086,7 +17207,7 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
                         Decrement (Local2)
                     }
 
-                    Store (BMD0, Local1)
+                    Store (B1B2(DMD0, DMD1), Local1)
                     Store (And (ShiftRight (Local1, 0x05), 0x0F), Local2)
                     Store (0x07, Local3)
                     While (Local2)
@@ -17128,7 +17249,7 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
                     }, Local0)
                 If (ECOK ())
                 {
-                    Store (BTDC, Local1)
+                    Store (RPRB(0x88, 64), Local1)
                     CreateField (Local0, Zero, 0x40, BMA0)
                     Store (Local1, BMA0)
                 }
@@ -17145,7 +17266,7 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
                     }, Local0)
                 If (ECOK ())
                 {
-                    Store (BMNN, Local1)
+                    Store (RPRB(0x90, 72), Local1)
                     CreateField (Local0, Zero, 0x48, BMA0)
                     Store (Local1, BMA0)
                 }
@@ -17187,7 +17308,7 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
                 }
             }
 
-            Method (_BIF, 0, NotSerialized)
+            Method (_BIF, 0, Serialized)
             {
                 Name (STAT, Package (0x0D)
                 {
@@ -17219,11 +17340,11 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
 
                     Store (^^EC0.BDN0, Local0)
                     Store (Local0, BMDL)
-                    Store (Multiply (^^EC0.BFC0, BASC), Index (STAT, One))
+                    Store (Multiply (B1B2(^^EC0.DFC0, ^^EC0.DFC1), BASC), Index (STAT, One))
                     Sleep (0x14)
-                    Store (^^EC0.BDV0, Index (STAT, 0x04))
+                    Store (B1B2(^^EC0.DDV0, ^^EC0.DDV1), Index (STAT, 0x04))
                     Sleep (0x14)
-                    Store (Multiply (^^EC0.BFC0, BASC), Local2)
+                    Store (Multiply (B1B2(^^EC0.DFC0, ^^EC0.DFC1), BASC), Local2)
                     Sleep (0x14)
                     Store (Local2, Index (STAT, 0x02))
                     If (^^EC0.M4GO)
@@ -17249,7 +17370,7 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
                 Return (STAT)
             }
 
-            Method (_BST, 0, NotSerialized)
+            Method (_BST, 0, Serialized)
             {
                 Name (PBST, Package (0x04)
                 {
@@ -17262,19 +17383,19 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
                 {
                     Store (^^EC0.BST0, Index (PBST, Zero))
                     Sleep (0x14)
-                    Store (^^EC0.BAC0, Local4)
+                    Store (B1B2(^^EC0.DAC0, ^^EC0.DAC1), Local4)
                     Subtract (0xFFFF, Local4, Local4)
                     If (LEqual (BASC, 0x0A))
                     {
-                        Multiply (^^EC0.BDV0, Local4, Local4)
+                        Multiply (B1B2(^^EC0.DDV0, ^^EC0.DDV1), Local4, Local4)
                         Divide (Local4, 0x03E8, Local5, Local4)
                     }
 
                     Store (Local4, Index (PBST, One))
                     Sleep (0x14)
-                    Store (Multiply (^^EC0.BRC0, BASC), Index (PBST, 0x02))
+                    Store (Multiply (B1B2(^^EC0.DRC0, ^^EC0.DRC1), BASC), Index (PBST, 0x02))
                     Sleep (0x14)
-                    Store (^^EC0.BPV0, Index (PBST, 0x03))
+                    Store (B1B2(^^EC0.DPV0, ^^EC0.DPV1), Index (PBST, 0x03))
                     Sleep (0x14)
                     If (LNotEqual (^^EC0.BDN0, BMDL))
                     {
@@ -17720,5 +17841,10 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
             PUSH(TEMP)
         }
     }
+    Method (B1B2, 2, NotSerialized)
+    {
+        Return(Or(Arg0, ShiftLeft(Arg1, 8)))
+    }
+        
 }
 
