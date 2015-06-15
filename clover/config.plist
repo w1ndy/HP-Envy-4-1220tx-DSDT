@@ -104,20 +104,12 @@
                 <key>PStates</key>
                 <false/>
             </dict>
-            <key>EnableC7</key>
-            <true/>
-            <key>EnableC6</key>
-            <true/>
-            <key>EnableC4</key>
-            <false/>
-            <key>EnableC2</key>
-            <true/>
         </dict>
 	</dict>
 	<key>Boot</key>
 	<dict>
 		<key>Arguments</key>
-		<string>-v -xcpm -gux-defer-usb2 kext-dev-mode=1 slide=0</string>
+		<string>-v -xcpm kext-dev-mode=1</string>
 		<key>DefaultVolume</key>
 		<string>OS X</string>
 		<key>NeverHibernate</key>

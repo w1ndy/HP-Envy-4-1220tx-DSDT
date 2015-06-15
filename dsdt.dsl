@@ -2238,13 +2238,16 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
                 {
                     Name (_HID, EisaId ("PNP0103"))
                     Name (_UID, Zero)
-                    Name (BUF0, ResourceTemplate ()
-                    {
+                    Name (BUF0, ResourceTemplate()
+{
+    IRQNoFlags() { 0, 8, 11, 15 }
+
                         Memory32Fixed (ReadWrite,
                             0xFED00000,         // Address Base
                             0x00000400,         // Address Length
                             )
                     })
+
                     Method (_STA, 0, NotSerialized)
                     {
                         If (LGreaterEqual (OSYS, 0x07D1))
@@ -2397,8 +2400,7 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
                             0x01,               // Alignment
                             0x02,               // Length
                             )
-                        IRQNoFlags ()
-                            {2}
+                        
                     })
                 }
 
@@ -2550,8 +2552,7 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
                             0x01,               // Alignment
                             0x08,               // Length
                             )
-                        IRQNoFlags ()
-                            {8}
+                        
                     })
                 }
 
@@ -2572,8 +2573,7 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
                             0x10,               // Alignment
                             0x04,               // Length
                             )
-                        IRQNoFlags ()
-                            {0}
+                        
                     })
                 }
 
@@ -8991,25 +8991,8 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
         Device (GLAN)
         {
             Name (_ADR, 0x00190000)
-            Method (_PRW, 0, NotSerialized)
-            {
-                If (WOLE)
-                {
-                    Return (Package (0x02)
-                    {
-                        0x0D, 
-                        0x04
-                    })
-                }
-                Else
-                {
-                    Return (Package (0x02)
-                    {
-                        0x0D, 
-                        Zero
-                    })
-                }
-            }
+            Name(_PRW, Package() { 0x0D, 0 })
+            
         }
 
         Device (EHC1)
@@ -9460,11 +9443,7 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
                 }
             }
 
-            Name (_PRW, Package (0x02)
-            {
-                0x0D, 
-                0x03
-            })
+            
             Name (XHCN, One)
             Method (XHCA, 0, NotSerialized) { Store (1, ^^XHC1.PAHC) }
             Method (XHCB, 0, NotSerialized) { Store (1, ^^XHC1.PBHC) }
@@ -9474,6 +9453,21 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
             Method (EHCB, 0, NotSerialized) { Store (0, ^^XHC1.PBHC) }
             Method (EHCC, 0, NotSerialized) { Store (0, ^^XHC1.PCHC) }
             Method (EHCD, 0, NotSerialized) { Store (0, ^^XHC1.PDHC) }
+            Name(_PRW, Package() { 0x0D, 0 })
+            Method (_DSM, 4, NotSerialized)
+            {
+                If (LEqual (Arg2, Zero)) { Return (Buffer() { 0x03 } ) }
+                Return (Package()
+                {
+                    "subsystem-id", Buffer() { 0x70, 0x72, 0x00, 0x00 },
+                    "subsystem-vendor-id", Buffer() { 0x86, 0x80, 0x00, 0x00 },
+                    "AAPL,current-available", 2100,
+                    "AAPL,current-extra", 2200,
+                    "AAPL,current-extra-in-sleep", 1600,
+                    "AAPL,device-internal", 0x02,
+                    "AAPL,max-port-current-in-sleep", 2100,
+                })
+            }
         }
 
         Device (EHC2)
@@ -9807,12 +9801,23 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
                 }
             }
 
-            Name (_PRW, Package (0x02)
-            {
-                0x0D, 
-                0x03
-            })
+            
             Name (XHCN, One)
+            Name(_PRW, Package() { 0x0D, 0 })
+            Method (_DSM, 4, NotSerialized)
+            {
+                If (LEqual (Arg2, Zero)) { Return (Buffer() { 0x03 } ) }
+                Return (Package()
+                {
+                    "subsystem-id", Buffer() { 0x70, 0x72, 0x00, 0x00 },
+                    "subsystem-vendor-id", Buffer() { 0x86, 0x80, 0x00, 0x00 },
+                    "AAPL,current-available", 2100,
+                    "AAPL,current-extra", 2200,
+                    "AAPL,current-extra-in-sleep", 1600,
+                    "AAPL,device-internal", 0x02,
+                    "AAPL,max-port-current-in-sleep", 2100,
+                })
+            }
         }
 
         Device (XHC1)
@@ -9928,13 +9933,24 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
                     Name (MUXS, "EHCD")
                 }
             }
+            
+            //
+            // alternate for above
+            //Method (_PRW, 0, NotSerialized) { Return (Package() { 0x0D, 0x04 }) }
+            Method (XHCA, 0, NotSerialized) { Store (One, PAHC) }
+            Method (XHCB, 0, NotSerialized) { Store (One, PBHC) }
+            Method (XHCC, 0, NotSerialized) { Store (One, PCHC) }
+            Method (XHCD, 0, NotSerialized) { Store (One, PDHC) }
+            Method (EHCA, 0, NotSerialized) { Store (Zero, PAHC) }
+            Method (EHCB, 0, NotSerialized) { Store (Zero, PBHC) }
+            Method (EHCC, 0, NotSerialized) { Store (Zero, PCHC) }
+            Method (EHCD, 0, NotSerialized) { Store (Zero, PDHC) }
+            Name(_PRW, Package() { 0x0D, 0 })
             Method (_DSM, 4, NotSerialized)
             {
                 If (LEqual (Arg2, Zero)) { Return (Buffer() { 0x03 } ) }
                 Return (Package()
                 {
-                    "AAPL,clock-id", Buffer() { 0x02 },
-                    "built-in", Buffer() { 0x00 },
                     "subsystem-id", Buffer() { 0x70, 0x72, 0x00, 0x00 },
                     "subsystem-vendor-id", Buffer() { 0x86, 0x80, 0x00, 0x00 },
                     "AAPL,current-available", 2100,
@@ -9944,17 +9960,6 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
                     "AAPL,max-port-current-in-sleep", 2100,
                 })
             }
-            //Method (_PRW, 0, NotSerialized) { Return (GPRW (0x0D, 0x04)) }
-            // alternate for above
-            Method (_PRW, 0, NotSerialized) { Return (Package() { 0x0D, 0x04 }) }
-            Method (XHCA, 0, NotSerialized) { Store (One, PAHC) }
-            Method (XHCB, 0, NotSerialized) { Store (One, PBHC) }
-            Method (XHCC, 0, NotSerialized) { Store (One, PCHC) }
-            Method (XHCD, 0, NotSerialized) { Store (One, PDHC) }
-            Method (EHCA, 0, NotSerialized) { Store (Zero, PAHC) }
-            Method (EHCB, 0, NotSerialized) { Store (Zero, PBHC) }
-            Method (EHCC, 0, NotSerialized) { Store (Zero, PCHC) }
-            Method (EHCD, 0, NotSerialized) { Store (Zero, PDHC) }
 
         }
 
@@ -9973,26 +9978,9 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
                     ,   15, 
                 PMES,   1
             }
+            Name(_PRW, Package() { 0x0D, 0 })
 
-            Method (_PRW, 0, NotSerialized)
-            {
-                If (WKMD)
-                {
-                    Return (Package (0x02)
-                    {
-                        0x0D, 
-                        0x04
-                    })
-                }
-                Else
-                {
-                    Return (Package (0x02)
-                    {
-                        0x0D, 
-                        Zero
-                    })
-                }
-            }
+            
         }
 
         Device (DOCK)
