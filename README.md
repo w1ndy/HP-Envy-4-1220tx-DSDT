@@ -40,11 +40,10 @@ Installation:
 What works:
 
 * Speedstep (800MHz to 2700MHz)
-* Wireless (replace with AR9285)
+* Wireless (replaced with AR9285)
 * Integrated graphics (HD4000) and HDMI output
 * Brightness adjustment (also via keyboard)
 * Sleep
+* Speaker and microphone (IDT 92HD91BXX)
+* USB 3.0
 
-What does not work (yet):
-
-* Audio
