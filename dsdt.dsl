@@ -10255,6 +10255,20 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
                     0x09, 
                     0x04
                 })
+                Method (_DSM, 4, NotSerialized)
+                {
+                    If (LEqual (Arg2, Zero)) { Return (Buffer() { 0x03 } ) }
+                    Return (Package()
+                    {
+                        "device-id", Buffer() { 0x2B, 0x00, 0x00, 0x00 },
+                        "name", "pci168c,2b",
+                        "AAPL,slot-name", Buffer() { "AirPort" },
+                        "device_type", Buffer() { "AirPort" },
+                        "model", Buffer() { "Atheros 9285 802.11 b/g/n Wireless Network Adapter" },
+                        "subsystem-id", Buffer() { 0xA1, 0x30, 0x00, 0x00 },
+                        "subsystem-vendor-id", Buffer() { 0xAA, 0x17, 0x00, 0x00 },
+                    })
+                }
             }
 
             Method (HPME, 0, Serialized)
