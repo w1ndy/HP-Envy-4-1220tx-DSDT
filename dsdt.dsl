@@ -15876,20 +15876,21 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
             Name (_HID, EisaId ("PNP0C0D"))
             Method (_LID, 0, NotSerialized)
             {
+                \RMDT.P1("_LID activated")
                 If (LNot (LOr (LAnd (LGreaterEqual (BDID, 0x03), LLessEqual (
                     BDID, 0x06)), LAnd (LGreaterEqual (BDID, 0x83), LLessEqual (BDID, 0x86)))))
                 {
                     ^^PCI0.LPCB.EC0.ULID ()
                 }
-
+                \RMDT.P2("_LID finished with ", GP15)
                 Return (GP15)
             }
 
-            Name (_PRW, Package (0x02)
+            /*Name (_PRW, Package (0x02)
             {
                 0x1F, 
                 0x03
-            })
+            })*/
         }
     }
 
