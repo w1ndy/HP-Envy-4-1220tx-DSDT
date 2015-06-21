@@ -27,7 +27,6 @@ Required Kexts (place them in clover's driver injection folder, e.g. EFI/CLOVER/
 * FakeSMC.kext
 * RealtekRTL81xx.kext
 * VoodooPS2Controller.kext
-* IO80211Family.kext (Only required if you use AR9285 as a replacement of RT3290)
 
 Installation:
 
@@ -46,4 +45,4 @@ What works:
 * Sleep
 * Speaker and microphone (IDT 92HD91BXX)
 * USB 3.0
-
+* Lid status detecting
