@@ -10247,30 +10247,80 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
                 PMSX,   1
             }
 
-            Device (PXSX)
+            Device (ARPT)
             {
-                Name (_ADR, Zero)
-                Name (_PRW, Package (0x02)
+                Name (_ADR, Zero)  // _ADR: Address
+                Name (_PRW, Package (0x02)  // _PRW: Power Resources for Wake
                 {
                     0x09, 
                     0x04
                 })
-                Method (_DSM, 4, NotSerialized)
+                Name (_SUN, Zero)  // _SUN: Slot User Number
+                Method (_DSM, 4, NotSerialized)  // _DSM: Device-Specific Method
                 {
-                    If (LEqual (Arg2, Zero)) { Return (Buffer() { 0x03 } ) }
-                    Return (Package()
-                    {
-                        "device-id", Buffer() { 0x2B, 0x00, 0x00, 0x00 },
-                        "name", "pci168c,2b",
-                        "AAPL,slot-name", Buffer() { "AirPort" },
-                        "device_type", Buffer() { "AirPort" },
-                        "model", Buffer() { "Atheros 9285 802.11 b/g/n Wireless Network Adapter" },
-                        "subsystem-id", Buffer() { 0xA1, 0x30, 0x00, 0x00 },
-                        "subsystem-vendor-id", Buffer() { 0xAA, 0x17, 0x00, 0x00 },
-                    })
+                    Store (Package (0x14)
+                        {
+                            "built-in", 
+                            Buffer (One)
+                            {
+                                 0x00
+                            }, 
+
+                            "model", 
+                            Buffer (0x10)
+                            {
+                                "Apple WiFi card"
+                            }, 
+
+                            "subsystem-id", 
+                            Buffer (0x04)
+                            {
+                                 0x8F, 0x00, 0x00, 0x00
+                            }, 
+
+                            "subsystem-vendor-id", 
+                            Buffer (0x04)
+                            {
+                                 0x6B, 0x10, 0x00, 0x00
+                            }, 
+
+                            "model", 
+                            Buffer (0x19)
+                            {
+                                "Atheros AR9285 802.11 b/g/n Wireless Network Adapter"
+                            }, 
+
+                            "name", 
+                            Buffer (0x0B)
+                            {
+                                "pci168c,2a"
+                            }, 
+
+                            "device-id", 
+                            Unicode ("*"), 
+                            "subsystem-id", 
+                            Buffer (0x04)
+                            {
+                                 0x8F, 0x00, 0x00, 0x00
+                            }, 
+
+                            "subsystem-vendor-id", 
+                            Buffer (0x04)
+                            {
+                                 0x6B, 0x10, 0x00, 0x00
+                            }, 
+
+                            "device_type", 
+                            Buffer (0x08)
+                            {
+                                "Airport"
+                            }
+                        }, Local0)
+                    DTGP (Arg0, Arg1, Arg2, Arg3, RefOf (Local0))
+                    Return (Local0)
                 }
             }
-
+            
             Method (HPME, 0, Serialized)
             {
                 If (PMSX)
@@ -10289,7 +10339,7 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
                         }
                     }
 
-                    Notify (PXSX, 0x02)
+                    Notify (ARPT, 0x02)
                 }
             }
 
@@ -17518,6 +17568,36 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
     Method (B1B2, 2, NotSerialized)
     {
         Return(Or(Arg0, ShiftLeft(Arg1, 8)))
+    }
+    Method (DTGP, 5, NotSerialized)
+    {
+        If (LEqual (Arg0, Buffer (0x10)
+        {
+            /* 0000 */    0xC6, 0xB7, 0xB5, 0xA0, 0x18, 0x13, 0x1C, 0x44,
+            /* 0008 */    0xB0, 0xC9, 0xFE, 0x69, 0x5E, 0xAF, 0x94, 0x9B
+        }))
+        {
+            If (LEqual (Arg1, One))
+            {
+                If (LEqual (Arg2, Zero))
+                {
+                    Store (Buffer (One)
+                    {
+                        0x03
+                    }, Arg4)
+                    Return (One)
+                }
+                If (LEqual (Arg2, One))
+                {
+                    Return (One)
+                }
+            }
+        }
+        Store (Buffer (One)
+        {
+            0x00
+        }, Arg4)
+        Return (Zero)
     }
         
 }
