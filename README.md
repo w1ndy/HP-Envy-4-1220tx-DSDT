@@ -1,7 +1,6 @@
 ## HP-Envy-4-1220tx-DSDT
 
-This repository contains necessary DSDT and SSDT modifications for HP Envy 4 1220tx laptop running
-OS X Yosemite 10.10.3.
+This repository contains necessary DSDT and SSDT modifications, extra configuration and drivers for HP Envy 4 1220tx laptops running OS X Yosemite 10.10 / El Capitan 10.11 Beta 1.
 
 Contents:
 

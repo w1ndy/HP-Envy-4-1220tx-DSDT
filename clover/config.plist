@@ -109,7 +109,7 @@
 	<key>Boot</key>
 	<dict>
 		<key>Arguments</key>
-		<string>-v -xcpm kext-dev-mode=1</string>
+		<string>-v -xcpm kext-dev-mode=1 rootless=0</string>
 		<key>DefaultVolume</key>
 		<string>OS X</string>
 		<key>NeverHibernate</key>
@@ -191,7 +191,7 @@
                 <key>Comment</key>
                 <string>Expect 2 matches</string>
                 <key>Find</key>
-                <data>hBnUEQ==</data>
+                <data>gxnUEQ==</data>
                 <key>Replace</key>
                 <data>AAAAAA==</data>
             </dict>
@@ -201,22 +201,13 @@
                 <key>Comment</key>
                 <string>Expect 2 matches</string>
                 <key>Find</key>
-                <data>ixnUEQ==</data>
-                <key>Replace</key>
-                <data>4HYdEQ==</data>
-            </dict><dict>
-                <key>Name</key>
-                <string>DummyHDA</string>
-                <key>Comment</key>
-                <string>Expect 2 matches</string>
-                <key>Find</key>
                 <data>hBnUEQ==</data>
                 <key>Replace</key>
                 <data>AAAAAA==</data>
             </dict>
             <dict>
                 <key>Name</key>
-                <string>DummyHDA</string>
+                <string>AppleHDA</string>
                 <key>Comment</key>
                 <string>Expect 2 matches</string>
                 <key>Find</key>

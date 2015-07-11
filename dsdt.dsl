@@ -12365,6 +12365,7 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
 
                     Method (_BCM, 1, NotSerialized)
                     {
+                        \RMDT.P2("Set Brightness", Arg0)
                         Store (Arg0, BRTL)
                         Divide (Arg0, 0x0A, Local0, Local1)
                         Decrement (Local1)
