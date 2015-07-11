@@ -9904,7 +9904,7 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
                     })
                     Name (MUXS, "EHCB")
                 }
-                Device (PRT3)
+                Device (PRT5)
                 {
                     Name (_ADR, 0x03)
                     Alias (UPCP, _UPC)
@@ -9918,7 +9918,7 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
                     })
                     Name (MUXS, "EHCC")
                 }
-                Device (PRT4)
+                Device (PRT6)
                 {
                     Name (_ADR, 0x04)
                     Alias (UPCP, _UPC)
