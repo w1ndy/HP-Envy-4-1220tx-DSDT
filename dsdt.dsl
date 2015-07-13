@@ -7126,7 +7126,8 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
 
     Method (_PTS, 1, NotSerialized)
     {
-        Store (Zero, P80D)
+        \rmdt.p2("_PTS enter", Arg0)
+Store (Zero, P80D)
         P8XH (Zero, Arg0, Zero)
         Store (Arg0, SLPS)
         If (LEqual (Arg0, 0x03))
@@ -7219,11 +7220,14 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
         }
 
         \_SB.WMID.ESDT ()
+\rmdt.p1("_PTS exit")
+
     }
 
     Method (_WAK, 1, Serialized)
     {
-        Store (0xC4, SSMP)
+        \rmdt.p2("_WAK enter", Arg0)
+Store (0xC4, SSMP)
         Store (Zero, P80D)
         CMSW (0x60, Zero)
         If (NEXP)
@@ -7384,11 +7388,14 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
         }
 
         Store (PSSP, \_SB.PCI0.LPCB.EC0.PSED)
-        Return (Package (0x02)
+        
+\rmdt.p1("_WAK exit")
+Return (Package (0x02)
         {
             Zero, 
             Zero
         })
+
     }
 
     Method (GETB, 3, Serialized)
@@ -9904,7 +9911,7 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
                     })
                     Name (MUXS, "EHCB")
                 }
-                Device (PRT5)
+                Device (PRT3)
                 {
                     Name (_ADR, 0x03)
                     Alias (UPCP, _UPC)
@@ -9918,7 +9925,7 @@ DefinitionBlock ("dsdt.aml", "DSDT", 1, "Apple ", "INSYDE  ", 0x00000000)
                     })
                     Name (MUXS, "EHCC")
                 }
-                Device (PRT6)
+                Device (PRT4)
                 {
                     Name (_ADR, 0x04)
                     Alias (UPCP, _UPC)
